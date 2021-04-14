@@ -1,0 +1,1 @@
+Único intuito é montar uma planilha com os dados de internet pra esfregar na cara de Claro/net
