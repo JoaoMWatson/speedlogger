@@ -1,15 +1,18 @@
 import speedtest
-import time
 import pandas as pd
+import time
 import matplotlib as matplot
-from datetime import datetime
+import numpy as np
 
 
-def prepare():
+def get_data():
     res = {'download': [],
            'upload': [],
            'ping': [],
            'timestamp': []}
+
+    print("Começando: " + time.strftime("%H:%M:%S", time.localtime()))
+    print("Aperte Ctrl+C para parar ")
     while True:
         try:
             st = speedtest.Speedtest()
@@ -22,18 +25,26 @@ def prepare():
                 round(result_raw['download']/1024/1024, 2))
             res['upload'].append(round(result_raw['upload']/1024/1024, 2))
             res['ping'].append(round(result_raw['ping'], 2))
-            res['timestamp'].append(str(datetime.now()))
+            res['timestamp'].append(time.strftime("%H:%M", time.localtime()))
+            time.sleep(60)
         except KeyboardInterrupt:
+            print('Encerrando...')
             break
     return res
 
 
-if __name__ == "__main__":
-    result = prepare()
+def graphs():
+    df = pd.read_csv('log.csv')
+    print(df)
 
+
+if __name__ == "__main__":
+    result = get_data()
     df = pd.DataFrame({'Download': result['download'],
                        'Upload': result['upload'],
                        'Ping': result['ping'],
                        'Timestamp': result['timestamp']})
 
-    df.to_csv('log.xlsx', sep='\t', encoding='utf-8')
+    df.to_csv('log.csv', encoding='utf-8', index=False)
+
+    # graphs()
